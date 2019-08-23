@@ -1,0 +1,26 @@
+*{background-color:transparent; font-family:segoe ui; font-size:14px; margin:0; padding:0; color:#333;}
+body{background-color:#555;}
+
+#wrapper{width:900px;margin:12px;padding:18px;border:solid 1px #999;background-color:#555;}
+.list{padding:16px 16px;margin:12px 0px;border-radius:40px;background-color:#fff;}
+.list_title{text-align:center;font-size:40px;color:#333;font-weight:bolder;margin:12px;border-radius:28px;}
+.list_items{overflow:hidden;}
+.list_item{border-bottom:solid 1px #aaa;padding:10px 20px;margin-left:50px;}
+.list_item .item_name{font-size:28px;width:580px;}
+.list_item .item_date{font-size:20px;width:120px;float:right;color:#666;}
+#lists input[type='text']{border:none;font-size:28px;}
+
+#new_list input[type='text']{border:none;border-bottom:solid 1px #999;font-size:40px;}
+
+
+.color0{box-shadow:0px 0px 16px 12px #afa;background-color:#afa;}
+.color1{box-shadow:0px 0px 16px 12px #fda;background-color:#fda;}
+.color2{box-shadow:0px 0px 16px 12px #c50;background-color:#c50;}
+.color3{box-shadow:0px 0px 16px 12px #a5a;background-color:#a5a;}
+.color4{box-shadow:0px 0px 16px 12px #fda;background-color:#fda;}
+.color5{box-shadow:0px 0px 16px 12px #fda;background-color:#fda;}
+
+/*
+backgound:linear-gradient(to right,#fff,#fda,#fff);
+
+*/

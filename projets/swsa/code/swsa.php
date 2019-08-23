@@ -1,0 +1,5 @@
+
+<?
+	include('AlgoGen.php');
+?>
+

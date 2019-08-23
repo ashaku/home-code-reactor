@@ -1,0 +1,98 @@
+/*
+	Client::UI
+	Style de la Forge
+*/
+
+*{background-color:transparent; font-family:segoe ui; font-size:14px; margin:0; padding:0; color:#bfbdb4;}
+body{background-color:#2f2d24;}
+a{color:#ffda44;}
+
+#wrapper{z-index:1;}
+#header{height:66px;padding:0px 24px;border:none;z-index:2;background-color:#ffda44;}
+#header>div{display:inline-block;transform:scale(1.5,0.95);margin-left:45px;margin-top:10px;line-height:16px;}
+#header span{color:#2f2d24;font-variant:small-caps;font-family:fantasy, sans-serif;}
+#header .spacer{width:166px;height:4px;border-bottom:solid 4px #2f2d24;}
+#header .titre{font-size:36px;font-weight:bold;}
+#header .caption{font-size:18px;letter-spacing:0.55px;}
+#content{min-height:250px;padding:16px;border:none;z-index:2;}
+
+/* bloc "Nouveau projet" en haut de page */
+#new_project{z-index:3;padding:6px;margin:4px 0px 16px;}
+#new_project select{font-size:18px;width:60px;}
+#new_project input{font-size:22px;border:none;border-bottom:solid 1px #bfbdb4;}
+
+/* Menu de navigation, colonne a gauche : liste des projets */
+#projects_list{width:250px;z-index:3;padding:6px;margin:0px 4px;display:inline-block;vertical-align:top;background-color:#4f4d44;border-radius:16px;}
+#projects_list ul{list-style:none;}
+#projects_list ul li{margin:5px 0px;padding-left:8px;}
+#projects_list table{width:100%;}
+#projects_list table td{border-bottom:solid 1px #5b5950;padding:8px 0px;vertical-align:middle;}
+#projects_list table td.statutProjet{width:24px;}
+#projects_list table td.statutProjet img{padding-top:4px;}
+#projects_list table td.dateModif{font-size:12px;padding-top:14px;}
+#projects_list table tr a{font-size:18px;letter-spacing:1px;}
+
+/* Vue detail d'un projet */
+#project{width:900px;min-height:525px;z-index:3;padding:6px;margin:0px 4px;display:inline-block;vertical-align:top;border:solid 1px #ffda44;border-radius:16px;box-shadow:0px 0px 8px 2px #ffda44;}
+/* Blocs de contenu dans un projet */
+.project_block{margin:10px 0px 30px 0px;padding:0px 8px;display:inline-block;vertical-align:top;}
+.block_title{border-bottom:solid 1px #ffda44;}
+.block_title span{font-size:32px;margin-left:8px;font-weight:bolder;color:#ffda44;cursor:pointer;}
+.block_title img{cursor:pointer;}
+.more_desc{font-size:10px;color:#6f6d64;border-top:solid 1px #4f4d44;text-align:center;cursor:pointer;}
+
+/* Bloc "données generales" en entete */
+#general {width:380px;display:inline-block;vertical-align:top;margin-left:12px;}
+#project_status_change{position:absolute;left:250px;width:57px;height:144px;border:solid 1px #961;border-radius:4px;background-color:#3c3530;z-index:10;}
+#project_status_change img{width:32px;height:32px;padding:6px 12px;cursor:pointer;}
+#project_name a{font-size:48px;font-weight:bolder;margin-left:12px;}
+#general input{font-size:14px;}
+#project_homepage{border:none;border-bottom:solid 1px #bfbdb4;}
+#project_desc{overflow:hidden;cursor:pointer;}
+
+/* sous-sections d'un bloc */
+.project_section{margin:0px 0px 20px 20px;}
+.section_title{border-bottom:solid 1px #ffda44;}
+.section_title span{font-size:20px;margin-left:8px;font-weight:bolder;color:#ffda44;}
+.project_block input{font-size:18px;border:none;border-bottom:solid 1px #bfbdb4;}
+
+/* Graphique des tickets */
+#graphique{cursor:pointer;width:500px;display:inline-block;vertical-align:top;}
+/* Bloc "tickets" */
+#tickets{overflow:hidden;}
+#tickets .block_title{cursor:pointer;}
+.ticket_list{margin-top:4px;}
+.ticket_list td{border-bottom:solid 1px #666;}
+.close{opacity:0.7;}
+.open td{padding-bottom:5px;margin-bottom:5px;}
+.ticket_col_desc{width:550px;font-size:12px;}
+.ticket_col_desc b{font-size:16px;color:#ffda44;}
+.ticket_col_desc span{font-size:15px;color:#ffda44;}
+.ticket_col_date{width:125px;text-align:center;font-size:11px;}
+.ticket_col_date b{font-size:14px;color:#ffda44;}
+.ticket_col_date span{font-size:12px;color:#bfbdb4;}
+.list_btn{width:75px;height:24px;border:solid 1px #ffda44;padding-top:4px;margin-left:26px;color:#ffda44;cursor:pointer;}
+
+#functionnalities table tr{color:#cec;background:linear-gradient(to right,#2f2d24,#252925 25%,#252925 75%,#2f2d24);}
+#anomalies table tr{color:#ecc;background:linear-gradient(to right,#2f2d24,#292525 25%,#292525 75%,#2f2d24);}
+#debt table tr{color:#cce;background:linear-gradient(to right,#2f2d24,#252529 35%,#252529 65%,#2f2d24);}
+
+
+/* Bloc "tests" */
+#tests{overflow:hidden;}
+#tests .section_title img{cursor:pointer;}
+#tests_list td{border-bottom:solid 1px #666;height:30px;}
+#tests_list td img{margin-top:4px;}
+.test_name{width:200px;}
+.test_status{width:40px;}
+.test_date{width:130px;font-size:12px;}
+.test_run{width:30px;cursor:pointer;}
+
+/* Bloc "versions" */
+#version_detail{position:absolute;left:400px;width:320px;border:solid 1px #961;border-radius:4px;padding:8px;background-color:#3c3530;font-size:12px;font-family:monospace;}
+#version_detail div{font-size:12px;padding:4px 0px;}
+#version_detail div.evolution{color:#cec;backgroundcolor:#252a25;}
+#version_detail div.correctif{color:#ecc;backgroundcolor:#2a2525;}
+#version_detail div.refactoring{color:#cce;backgroundcolor:#25252a;}
+
+#footer{height:16px;padding:12px 0px;font-size:12px;text-align:center;z-index:2;background-color:#ffda44;color:#2f2d24;}

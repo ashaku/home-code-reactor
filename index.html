@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang='fr'>
+	<head>
+		<title>MR. FORGE</title>
+		<link rel="stylesheet" type="text/css" href="screen.css">
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<!-- Wrapper global -->
+		<div id="wrapper">
+		
+			<!-- Entete -->
+			<div id="header">
+				<div class='ctn_titre'>
+				<span class='titre'>mr. forge</span>
+				<div class='spacer'></div>
+				<span class='caption'>home code reactor</span>
+				</div>
+			</div>
+			
+			<!-- contenu -->
+			<div id="content">
+
+				<!-- formulaire "nouveau projet" -->
+				<div id="new_project">
+					<select id="new_project_type">
+						<option value="JS">JS</option>
+						<option value="PHP">PHP</option>
+					</select> &nbsp; &nbsp; 
+					<input type="text" name="new_project_name" id="new_project_name" size="48" placeHolder="Nouveau Projet"/> &nbsp; &nbsp; 
+					<input type="text" name="new_project_folder" id="new_project_folder" size="33" placeholder="dossier" onFocus="handle_key_folder(event)"/>
+					<input type="text" name="new_project_desc" id="new_project_desc" size="92" placeholder="decription" onKeyPress="handle_key_desc(event)"/>
+				</div>
+
+				<!-- navigation "liste projet" -->
+				<div id="projects_list"></div>
+
+				<!-- fiche principale "detail projet" -->
+				<div id="project">
+					<div>
+						<!-- infos générales : statut,nom,desc,homepage -->
+						<div id="general">
+							<div id="project_status_change" onmouseout="hide_status_change()"/>
+								<img src="img/run.png" onclick="change_project_status('run')" />
+								<img src="img/pause.png" onclick="change_project_status('pause')" />
+								<img src="img/stop.png" onclick="change_project_status('stop')" />
+							</div>
+							<div><img id="project_status" width=36 height=36 src="" onmouseover="display_status_change()"/><span id="project_name"></span></div>
+							<div>/projets/<span id="project_folder"></span>/code/<input type="text" id="project_homepage" size="16" onKeyPress="handle_key_page(event)"/></div>
+							<div id="project_desc" onclick="toggle_desc()">
+								<div id="desc_text"></div>
+							</div>
+							<!--<div id="more_desc" class="more_desc" onclick="toggle_desc()">voir plus ...</div>-->
+						</div>
+						<!-- Graphique des tickets -->
+						<div id="graphique" onclick="toggle_tickets()">
+							<canvas id="graph_projet" width="800" height="250"></canvas>
+						</div>
+					</div>
+					
+					<!-- Conteneur "Tickets" -->
+					<div id="tickets" class="project_block">
+						<div id="tickets_ctn">
+							<div class="block_title" onclick="toggle_tickets()">
+								<img width=24 height=24 src="img/tickets.png"/> <span>Tickets</span>
+							</div>
+							
+							<!-- fonctionnalités : tickets evolution -->
+							<div id="functionnalities" class="project_section">
+								<div class="section_title"><img width=18 height=18 src="img/func.png"/> <span>Fonctionnalités / évolutions</span></div>
+								<div id="new_functionnality">
+									<input type="text" name="new_func_name" id="new_func_name" size="32" placeHolder="Nouvelle fonctionnalité"/> &nbsp; &nbsp; 
+									<input type="text" name="new_func_desc" id="new_func_desc" size="48" placeholder="desc" onKeyPress="handle_key_ticket(event,1)"/>
+								</div>
+								<div id="func_list" class="ticket_list"></div>
+							</div>
+							
+							<!-- anomalies : tickets correctif -->
+							<div id="anomalies" class="project_section">
+								<div class="section_title"><img width=18 height=18 src="img/bug.png"/> <span>Anomalies / correctifs</span></div>
+								<div id="new_anomaly">
+									<input type="text" name="new_bug_name" id="new_bug_name" size="32" placeHolder="Nouvelle anomalie"/> &nbsp; &nbsp; 
+									<input type="text" name="new_bug_desc" id="new_bug_desc" size="48" placeholder="desc" onKeyPress="handle_key_ticket(event,2)"/>
+								</div>
+								<div id="bug_list" class="ticket_list"></div>
+							</div>
+							
+							<!-- dette technique : tickets refactoring -->
+							<div id="debt" class="project_section">
+								<div class="section_title"><img width=18 height=18 src="img/ref.png"/> <span>Dette technique / refactoring</span></div>
+								<div id="new_debt">
+									<input type="text" name="new_ref_name" id="new_ref_name" size="32" placeHolder="Nouvelle dette"/> &nbsp; &nbsp; 
+									<input type="text" name="new_ref_desc" id="new_ref_desc" size="48" placeholder="desc" onKeyPress="handle_key_ticket(event,3)"/>
+								</div>
+								<div id="ref_list" class="ticket_list"></div>
+							</div>
+						</div>
+					</div>
+					
+					
+					
+					<!-- conteneur "Tests" -->
+					<div id="tests" class="project_block" style="width:420px;">
+						<div id="tests_ctn">
+							<div class="block_title">
+								<img width=24 height=24 src="img/scan.png" onclick="sync_tests()" title="Mettre à jour la liste des tests"/> 
+								<span>Tests</span> &nbsp; 
+								<img width=24 height=24 src="img/run_test.png" onclick="run_all_tests()" title="Lancer tous les tests"/>
+							</div>
+							<div id="tests_list" class=""></div>
+						</div>
+						<div id="script_ctn"></div>
+					</div>
+					
+					
+					
+					<!-- conteneur "Versions" -->
+					<div id="versions" class="project_block" style="width:420px;">
+						<div id="versions_ctn">
+							<div class="block_title"><img width=24 height=24 src="img/versions.png"/> <span>Versions</span></div>
+							<div id="version_detail"></div>
+							<div id="new_version" onmouseover="display_version_detail('current')" onmouseout="hide_version_detail()">
+								<input type="checkbox" id="new_version_code" checked/> &nbsp; &nbsp; 
+								<input type="text" name="new_version_num" id="new_version_num" size="8" placeHolder="Nouvelle version"/> &nbsp; &nbsp; 
+								<input type="text" name="new_version_desc" id="new_version_desc" size="24" placeHolder="Nouvelle version" onKeyPress="handle_key_version(event)"/>
+							</div>
+							<div id="versions_list" class=""></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div id="footer">v3.0</div>
+		</div>
+		<script src="jquery.js"></script>
+		<script src="forge.js"></script>
+		<script>
+			start();
+		</script>
+	</body>
+</html>

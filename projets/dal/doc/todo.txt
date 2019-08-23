@@ -1,0 +1,14 @@
+Fonctionnalités :
+	
+	Servir de projet pilote pour la forge :)
+	
+	connexion
+	requete
+	parcours resultat
+	gestion erreur
+	parametrage fichier externe
+	
+	classe ?
+	choix PHP4 ou 5 ?
+
+	

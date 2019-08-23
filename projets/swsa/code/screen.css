@@ -1,0 +1,157 @@
+*{
+	margin:0px;
+	padding:0px;
+	font-family:segoe ui;
+}
+body{
+	background-color:#111;
+	color:#ccc;
+}
+.monsterID{
+	margin:8px;
+	padding:12px;
+	width:350px;
+	border:solid 1px #777;
+	background-color:#2f2020;
+	color:#efe0e0;
+	font-size:14px;
+	text-align:center;
+}
+.monsterID b{
+	font-size:16px;
+}
+.monsterID span{
+	font-size:12px;
+	color:#afa0a0;
+	margin:0px 6px;
+	display:inline-block;
+}
+
+.monsterID td{
+	padding:0px 8px;
+}
+.monsterID td.statName{
+	text-align:right;
+	color:#ffc;
+}
+.monsterID td.statVal{
+	text-align:right;
+}
+.monsterID td.statMod{
+	text-align:left;
+	color:#cfc;
+}
+
+.runage{
+	width:320px;
+	padding:0px 15px;
+}
+.runage span{
+	margin:0px 6px;
+	font-size:12px;
+	display:inline-block;
+	color:#afa0a0;
+}
+.runage span.main{
+	font-size:14px;
+	font-weight:600;
+	text-align:center;
+}
+.rune{
+	border:solid 1px #444;
+	width:70px;
+}
+.rune .sub{
+	font-size:12px;
+}
+.skills span{
+	width:60px;
+	height:36px;
+	padding:5px;
+	border:solid 1px #ccc;
+	overflow:hidden;
+}
+
+.combat tr{
+	border-bottom:solid 1px #777;
+}
+.combat td {
+	padding:2px 8px;
+}
+
+.fight{
+	width:670px;
+	margin:8px;
+	padding:2px;
+	border:solid 1px #777;
+	background-color:#191515;
+	color:#efe0e0;
+	font-size:14px;
+	text-align:center;
+}
+.team{
+	width:650px;
+	height:100px;
+	padding:0px 6px;
+	backround-color:#2f20f0;
+}
+.infightMonster{
+	margin:12px 4px;
+	display:inline-block;
+	float:left;
+}
+.infightMonster table{
+	width:200px;
+	margin:0px;
+	padding:0px;
+	border:solid 1px #777;
+}
+.infightMonster table td{
+	margin:0px;
+	padding:0px;
+}
+.remainingHP{
+	background-color:#4a4;
+	height:16px;
+}
+.AttackBar{
+	background-color:#46c;
+	height:8px;
+}
+.emptyBar{
+	background-color:#fff;
+	opacity:0.8;
+}
+.infightMonster.water{	background-color:#20205f;	color:#e0e0ef;	}
+.infightMonster.fire{	background-color:#5f1010;	color:#efe0e0;	}
+.infightMonster.wind{	background-color:#104f10;	color:#e0efe0;	}
+.infightMonster.dark{	background-color:#2f202f;	color:#d0d0d0;	}
+.infightMonster.light{	background-color:#5f5f50;	color:#fffffe;	}
+
+.infightMonster .name{	font-weight:bolder;	}
+.infightMonster .runesBonus{	font-size:11px;	}
+
+.buffDebuff{
+	height:20px;
+}
+.buffDebuff div{
+	width:18px;
+	height:20px;
+	margin:0px 2px;
+	border:solid 1px #777;
+	color:#fff;
+	display:inline-block;
+}
+.buff{
+	background-color:#77f;
+}
+.debuff{
+	background-color:#f33;
+}
+
+.algogen{
+	margin:10px;
+	padding:10px;
+	background-color:#eee;
+	color:#444;
+}

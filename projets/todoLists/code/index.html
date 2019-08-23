@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang='fr'>
+	<head>
+		<title>TODO-Lists</title>
+		<link rel="stylesheet" type="text/css" href="screen.css">
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<!-- Conteneur global des listes -->
+		<div id="wrapper">
+			<div id="new_list" class="list">
+				<input type="text" name="new_list_name" id="new_list_name" size="26" placeholder='nouvelle liste' onKeyPress="handle_list_key(event)"/>
+				<input type="text" name="new_list_color" id="new_list_color" size="2" value='#fda' onchange='change_color();'/>
+				<img src="add-128.png" width="56" onclick="add_new_list();" style="float:right"/>
+			</div>
+			<div id="lists"></div>
+		</div>
+		<script src="jquery.js"></script>
+		<script src="list.js"></script>
+	</body>
+</html>

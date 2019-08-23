@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang='fr'>
+	<head>
+		<title>Life RPG</title>
+		<link rel="stylesheet" type="text/css" href="screen.css">
+		<meta charset="utf-8">
+		<script src="lrpg.js"></script>
+		<script src="jquery.js"></script>
+	</head>
+	<body>
+		<!-- Conteneur global de la page -->
+		<div id="global_wrap">
+			
+			<!-- PANEL GOOD : bonnes habitudes 	-->
+			<div id="good" class="panel">
+				
+				<!-- Boutons pour démarrer les compteurs -->
+				<div id="good_inputs" class="buttons">
+					<table border=0 width='94%'>
+						<tr>
+							<td class="title">sommeil</td>
+						</tr><tr>
+							<td>
+								<div onclick="start_count('dodo');" class="button" id="GBdodo_start">start</div>
+								<div onclick="stop_count('dodo');" class="button" id="GBdodo_stop">stop</div>
+							</td>
+						</tr><tr>
+							<td class="title">conditionnement</td>
+						</tr><tr>
+							<td>
+								<div onclick="start_count('cond');" class="button" id="GBcond_start">start</div>
+								<div onclick="stop_count('cond');" class="button" id="GBcond_stop">stop</div>
+							</td>
+						</tr><tr>
+							<td class="title">footing</td>
+						</tr><tr>
+							<td>
+								<div onclick="start_count('foot');" class="button" id="GBfoot_start">start</div>
+								<div onclick="stop_count('foot');" class="button" id="GBfoot_stop">stop</div>
+							</td>
+						</tr><tr>
+							<td class="title">marche</td>
+						</tr><tr>
+							<td>
+								<div onclick="start_count('walk');" class="button" id="GBwalk_start">start</div>
+								<div onclick="stop_count('walk');" class="button" id="GBwalk_stop">stop</div>
+							</td>
+					</tr></table>
+				</div>
+				
+				<!-- Graphique -->
+				<div id="good_graph" class="graph" onclick="switch_from('good')">
+					<canvas id="graph_good" width="550" height="450">loose!</canvas>
+				</div>
+				<br class="clearBoth" />
+			</div>
+			
+			
+			<!-- 	PANEL DIFF : différence bonnes - mauvaises habitudes		-->
+			<div id="diff" class="panel yellowLight" onclick="switch_time()">
+				<div class="graphique">
+					<canvas id="graph_diff" width="850" height="450">loose!</canvas>
+				</div>
+			</div>
+			
+			
+			<!--	PANEL BAD : mauvaises habitudes		-->
+			<div id="bad" class="panel">
+				
+				<!-- Graphique en étoile -->
+				<div id="bad_graph" class="graph" onclick="switch_from('bad')">
+					<canvas id="graph_bad" width="550" height="450"></canvas>
+				</div>
+				
+				<!-- Boutons pour incrémenter les compteurs -->
+				<div id="bad_inputs" class="buttons">
+					<ul><li>
+					<div onclick="incremente('coca');" class="button" id="BBcoca">sucre</div>
+					</li><li>
+					<div onclick="incremente('clope');" class="button" id="BBclope">clope</div>
+					</li><li>
+					<div onclick="incremente('bedo');" class="button" id="BBbedo"> </div>
+					</li><li>
+					<div onclick="incremente('junk');" class="button" id="BBjunk">junk food</div>
+					</li><li>
+					<div onclick="incremente('dent');" class="button" id="BBdent">dents</div>
+					</li></ul>
+				</div>
+				<br class="clearBoth" />
+			</div>
+		</div>
+		<script>
+			start_home();
+		</script>
+	</body>
+</html>

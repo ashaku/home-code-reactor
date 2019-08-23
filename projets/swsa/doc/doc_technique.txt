@@ -1,0 +1,347 @@
+Comment c'est fait / comment ca marche ?
+
+
+
+1. Architecture globale des fichiers de code
+============================================
+
+Le projet principal SWSA appelle simplement AlgoGenSWSA.php
+	AlgoGenSWSA applique l'algo génétique et a besoin de manipuler des monstres, il appelle le fichier Monstre.php, qui contient les classes Monster, LeaderSkill, MonsterLib
+		La définition des monstres est au centre des définitions des concepts du jeu. C'est la classe monstre qui inclut des stats, des runes et des skills. Tous ces contenus sont appellés ici, ainsi que le fichiers des constantes.
+
+Appels dans le filesystem				Classes contenues dans les fichiers
+swsa.php								-
+	AlgoGen.php							AlgoGenSWSA
+		Monster.php						Monster, LeaderSkill, MonsterLib
+			constants.php				ELMT, STATS, RUNEFAMILY, EFFECT, TARGET, DEBUFF, BUFF
+			Rune.php					Runage, Rune, Bonus
+			Skill.php					Skill, SkillAction, SkillEffect, Damage, SingleEffect
+				skillFactory.php		SkillLib
+			Combat.php					Combat
+		
+
+2. Détail des classes
+=====================
+
+	2.1. AlgoGenSWSA.php
+	-------------------------
+	Contient uniquement la classe AlgoGenSWSA qui implémente l'algorithme génétique. Fonctionne selon le principe global :
+		- génèse d'une population au code génétique aléatoire
+		- évaluation de la pertinence du code des individus (combat)
+		- selection et reproduction des meilleurs
+		- mutation des enfants issus de la reproduction
+	Ces étapes sont assez standard pour ce type d'algo, pour une explication détaillée des choix pour encoder les équipes de monstres en un code génétique, voir section "Code Génétique"
+		- $verbose;
+		- $size_population;
+		- $nb_generations;
+		- $population;
+		- $scores;
+		- $tmp_pop;
+		+ run()
+		+ genese()
+		+ evaluation()
+		+ selection()
+		+ reproduction()
+		+ cross_code ( $code1, $code2 )
+		+ mutation(&$code)
+		+ display()
+
+	2.2. Monstre.php
+	----------------------
+	Ce fichier contient la classe principale de gestion des monstres, qui contient en donnée membres des instances des autres classes du code (stats, runes, skills)
+	
+		2.2.1. La classe "Monster"
+		**************************
+		
+			Informations générales
+				Cette classe représentant un monstre, elle comprend des informations générales comme le nom et l'élément du monstre.
+				- name
+				- element
+				
+			Les stats
+				Les statistiques du monstre sont gérées à travers plusieurs tableaux :
+			
+				Stats de base
+					Au premier niveau se trouve "baseStats", un tableau de 8 entiers contenant les statistiques de base du monstre.
+					Les index des statistiques dans le tableau sont décrits par la classe de constantes "STATS". Exemple : baseStats[STATS::HP]
+					Pour info, l'ordre des stats dans le tableau est : [ 0:HP , 1:ATK , 2:DEF , 3:VIT , 4:CR , 5:CD , 6:PRE , 7:RES ]
+				- baseStats[8]
+				
+				Runes
+					Les bonus apportés par l'ensemble des runes (incluant la famille de rune) sont stockés dans un tableau "runeModifiers".
+					Le tableau de modificateurs est aussi un tableau d'entier. Cependant, il contient 16 valeurs en tout, 2 valeurs par stat : l'ajout en valeur absolue et l'ajout en % de la stat de base.
+					[ 0:HP+ , 1:HP+% , 2:ATK+ , 3:ATK+% , 4:DEF+ , 5:DEF+% , 6:VIT+ , 7:VIT+% , 8:CR+ , 9:CR+% ...]
+					Par exemple, le tableau modificateur [0,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0] ajoute 15% de HP au monstre
+					(note : les emplacements 8:CR+ , 10:CD+ , 12:PRE+ et 14:RES+ ne sont jamais utilisés : les valeurs CR, CD, PRE et RES sont toujours en %)
+					Au second niveau se trouve "runeStats", un tableau  de 8 entiers faisant la somme des stats de base et des bonus de runes, ce sont les stats du monstre au début du combat.
+					(note : avant le début du combat, le bonus de leader skill est directement appliqué et enregistré dans le tableau runeStats)
+				- runeModifiers[16]
+				- runeStats[8]
+				
+				Combat
+					Les bonus et malus apportés en combat par l'intermédiaire des buff et debuff sont consignés dans un tableau "buffModifiers". Il s'agit, comme runeModifiers, d'un tableau à 16 éléments pour distinguer les bonus en valeur absolue et ceux en %.
+					Au troisième niveau se trouvent les "fightStats", les statistiques réellement utilisées lors d'un combat. Elles sont initialisées avec runeStats au début du combat, puis sont mises à jour à chaque fois que buffModifiers est modifié.
+					Le tableau "fightStats" est toujours un tableau d'entier comme baseStats et runeStats. Cependant, "fightStats" contient un 9e élément : le nombre Max de HP du monstre. Ce 9e élément est aussi accessible par les constantes : fightStats[STATS::MAXHP]
+				- buffModifiers[16]
+				- fightStats[9]
+				
+				En résumé 
+					baseStats ---runeModifiers---> runeStats ---buffModifiers--> fightStats
+									leaderSkill-->
+		
+			Les runes
+				Afin de gérer les runes du monstre, et les bonus de stats qu'elles apportent, la classe comprend aussi un membre "runes" : une instance de la classe "Runage".
+				Cela fournit au monstre toutes les informations de bonus de stats apportés par les runes.
+				A la création du monstre, on fournit ses runes sous la forme d'un code binaire. Un objet Runage est alors créé pour décoder les runes et calculer les bonus. Cet objet est stocké puis utilisé pour mettre à jour le tableau "runeStats".
+				- runes[]
+		
+			Les compétences
+				Afin de gérer les compétences du monstre, la classe comprend aussi un membre "skills" : un tableau d'instances de la classe "Skill".
+				La classe possède aussi un membre "leaderSkill" : une instance de la classe leaderSkill (voir 2.2.2)
+				Enfin, le membre "cooldowns" gère le temps de repos des compétences avec un tableau des cooldowns des compétences
+				- skills[]
+				- cooldowns[]
+				
+			En combat
+				Avant le combat, le leader skill de chaque chef d'équipe est appliqué aux monstres de l'équipe s'ils satisfont la condition associée
+				Lorsqu'un buff ou debuff est posé sur le monstre, l'information est stockée dans un tableau buff ou debuff.
+				Les elements dans ces tableaux sont des tableaux [type, nbTurns, perCent] indiquant le type de buff/debuff et le nombre de tours avant d'expirer.
+				Le fait de poser ou enlever un buff ou un debuff apelle une fonction qui va calculer la modification de stats résultantes et mettre à jour les "fightStats".
+				Au début de son tour, on appelle sur le monstre sa fonction "cooldown()" qui va décrémenter tous les cooldowns du monstre : ceux de ses compétences ainsi que ceux des buff/debuff posés sur lui
+				- buffList[]
+				- debuffList[]
+				- leaderSkill
+				
+			Dans le code, pour créer une instance de la classe Monster, il faut fournir :
+				- un nom (chaine de caractère)
+				- un element (int, dans les constantes ELMT)
+				- des statistiques de base (tableau de 8 entiers)
+				- le code binaire des runes (chaine)
+				- les compétences (tableau d'instances de la classe Skill)
+				- le leaderSkill (instance de la classe leaderSkill)
+			A la création, les données générales sont copiées (incluant le tableau de skill et le leaderSkill).
+			Puis, on créé un objet Runage à qui l'on communique le code binaire du runage. Les runes sont créées et leurs modificateurs calculés pour remplir le tableau "runeStats".
+			Enfin les autres membres inutilisés à la création sont initialisés avec des valeurs vides ou par défaut.
+			
+			Le monstre dispose des comportements suivants :
+			
+				+ add_leader_skill_bonus ( $leadSkill, $zone )
+				
+				+ choose_skill($skillId=null)	
+				+ choose_skill_id()					<= PROVOKE DEBUFF HERE
+				
+				+ cooldown()
+				+ take_hit ( $dmg )
+				+ heal($amount)
+				+ add_buff($buff)
+				+ add_debuff($debuff)
+				+ remove_buff($buff)				<= STRIP
+				+ remove_debuff($debuff)			<= CLEANSE
+				
+				+ update_buffModifiers ( $add, $isBuff, $buffOrDebuff)
+				+ set_buffModifier ( $stat, $value )
+				
+				+ apply_constant_damages()			<= CONST DMG
+				+ apply_heal_buff()					<= HEAL BUFF HERE
+				+ isReady()							<= STUN, FREEZE, SLEEP HERE
+			
+		
+		
+		2.2.2. La classe LeaderSkill
+		****************************
+			Créée pour décrire et manipuler les infos relatives au leader skill. Il s'agit d'un bonus de stats, qui s'applique lorsque certaines conditions sont remplies.
+			Cette classe utilise ses propres constantes.
+			En données membres, on trouve une instance de la classe Bonus (voir 2.4.1), ainsi qu'une condition sous la forme d'un tableau d'entier avec la structure [type,val]
+			Les différents types de condition sont :
+			- NONE : aucune condition recquise pour bénéficier du bonus
+			- ELMT : bonus donné aux monstres d'un élément particulier
+			- ZONE : le bonus ne s'applique que dans une zone précise du jeu
+			La valeur qui accompagne le type fourni la restriction :
+				- Pour ELMT : l'élément est fourni avec la constante correspondante de la classe ELMT (Ex : ELMT::water)
+				- Pour ZONE, on utilise les constantes de la classe LeaderSkill : ARENA, DUNGEON ou GUILD
+	
+		
+	2.3. constantes.php
+	--------------------------
+	Rangées dans le fichier constantes.php, ces classes servent à la lisibilité du code, en manipulant les concepts du jeu comme des chaines de caractère (ex : STATS::HP ou TARGET::ALL)
+	Ces classes servent en fait d'énumération pour les différents concepts fixes du jeu :
+		ELMT : la liste des éléments du jeu (eau, feu, vent, ombre, lumiere). Exemple : ELMT::wind
+		STATS : les statistiques du monstre : hp, atq, def, vit, cr, cd, pre, res. Exemple : STATS::ATK
+		RUNEFAMILY : les familles de runes. Organisées par nombre necessaire pour fonctionner, les x2 de 0 à 9, les x4 à partir de 10. Exemple : RUNEFAMILY::Energy
+		EFFECT : tout effet unique pouvant être appliqué en combat : dégats, débuff, etc. Exemple : EFFECT::revive
+		TARGET : ciblage. Contient à la fois des informations de camp (allié/ennemi) et des informations de zone (unique, multi,tous,soi-même). Exemple : TARGET::ALL ou TARGET::ENNEMY
+		BUFF : liste des buff. Exemple : BUFF::RAISEATK
+		DEBUFF : liste des debuff. Exemple : DEBUFF::STUN
+	
+	
+	2.4. Rune.php
+	--------------
+	
+		2.4.1. La classe Runage
+		***********************
+		Représente les 6 runes, assure la cohérence des familles
+			code
+			runes[]
+			statsModif [HP,HP%,ATK,ATK%,...]
+			
+			+ decode() : créé les 6 runes à partir du code
+			+ set_stats_modif() ; calcule les modificateurs de stats du runage complet (main + sub + set)
+			+ display()
+	
+		2.4.2. La classe Rune
+		***********************
+		ensemble de bonus (sub)
+			code
+			position
+			Family : enum class RUNEFAMILY
+			mainStat : bonus
+			subStat[]
+			modifiers
+			
+			+ construct(code,mainstat)
+			+ decode()
+			+ set_family()
+			+ set_main() // met a jour modifiers
+			+ set_sub()	
+			+ display()
+		
+		La classe rune reçoit un code binaire décrivant sa famille et ses substats, et sa mainStat dans un parametre séparé
+		La mainStat pour les runes 1,3,5 est totalement prédéfinie.
+		La mainStat pour les runes 2,4,6 est partiellement prédéfinie comme un bonus en % et valeur max selon la stat (equivalent rune 5* lvl 15). La stat est limitée aux choix possibles dans le jeu selon 2,4,6
+		La classe Rune est en charge de créer ses sub et calculer ses modificateurs de stats
+		Les valeurs etant remplies aleatoirement, il est possible de créer des runes avec un bonus subStat identique à la mainStat, ce qui est impossible dans le jeu
+		Un systeme de validation vérifie la présence de doublons et corrige les sub en double, puis réécrit le code binaire décrivant la rune.
+
+		
+		2.4.3. La classe Bonus
+		***********************
+		Représente un bonus de statistique, par exemple "HP+33%" est un bonus.
+		Le bonus est divisé en 3 informations :
+			- la stat impactée
+			- le type de bonus (+X ou +X%)
+			- la valeur numérique du bonus
+		
+	
+	2.5. Skill.php
+	---------------
+	
+		2.5.1. La classe Skill
+		**********************
+		Classe principale, contenant le nom et le cooldown la liste des actions de la compétence
+			- name
+			- cooldown
+			- active
+			- actions[]		
+		
+		2.5.1. La classe SkillAction
+		****************************
+		Gere la cible de la compétence, de façon à pouvoir appliquer plusieurs effets sur une meme cible
+			- targetSide
+			- targetZone
+			- targetNb
+			- effects[]
+			+ get_target()
+			+ get_effects()		
+		
+		
+		2.5.1. La classe SkillEffect
+		****************************
+		MetaClasse d'un effet : pernd en charge le type de l'effet
+			- type
+			+ get_type()
+		
+		
+		2.5.1. La classe Damage extends SkillEffects
+		********************************************
+		Effet damage : calcule les dégats produits par un effet (fourni dans une formule) avec un monstre
+			- formula
+			- nbHits
+			- ignoreDef
+			+ get_damage(stats)	
+			
+		
+		2.5.1. La classe SingleEffect extends SkillEffects
+		**************************************************
+	
+	
+	2.6. Les classes Factory
+	------------------------
+		monsterLib
+		skillFactory
+		
+
+	2.7. Combat.php
+	----------------
+	Contient uniquement la classe Combat qui organise le déroulement d'un combat entre 2 équipes de N monstres, utilisant leur compétences jusqu'à la désignation d'un vainqueur.
+
+
+
+
+
+
+3. Code genetique :
+===================
+Etude des runages optimaux : le code genetique represente les possibilités de runage
+Main stat des runes 1, 3, 5 bloqués (non présents dans le code car non variables), Main stat des runes 2, 4, 6 restreint (liste définie)
+On considere les runes en 5* et :
+	nv.15 pour 2,4,6
+	nv.12 pour 1,3,5
+4 sub sont ajoutés aléatoirement (+5%~20% ou +100~400)
+
+Le code est composé de 3 parties distinctes : la description des main 2,4,6 puis les familles et enfin la liste des bonus pour les 6 runes
+	code = [main246][familles][rune1~6]
+
+[main246]
+Le main de la rune 2 est sur 2 bits pour 4 valeurs : hp,atk,def,vit
+Le main des runes 4 et 6 est sur 3 bits pour 5 valeurs possibles. On duplique certaines valeurs pour faire les 8 choix possibles à 3 bits
+rune 4 : hp,hp,atk,def,cr,cr,cd,cd
+rune 6 : hp,hp,atk,def,res,res,pre,pre
+	main246 = [22][444][666]
+
+[familles]
+On encode directement un runage de familles cohérent
+Le premier bit indique si l'on est en 4*2 ou en 2*2*2
+Les bits suivants décrivent les familles en 3 groupes de 4 bits
+Chaque groupe peut prendre une valeur de 0 à 15, on effectue un modulo sur le nombre de runes 2 ou 4 pour déterminer la famille
+	[F][1111][2222][3333]
+F :
+	0:4*2
+	1:2*2*2
+
+Dans le cas 4*2, le premier groupe est ignoré
+
+[rune1~6]
+Les runes encodent la liste de leur bonus, toujours au nombre de 6
+	rune : [bonus1][bonus2][bonus3][bonus4][bonus5][bonus6]
+Si une subStat est identique à la main stat, elle sera changée
+Si une subStat est identique à une autre, leur valeur sont additionnées
+
+Les bonus de stat sont décrits par 3 valeurs : la stat impactée, le type de bonus (+X ou +X%) et la valeur numérique du bonus
+Pour le code génétique, le type est toujours +X% sauf pour la vitesse. La valeur est fixée dans la classe. Le code ne décrit donc que la stat impactée
+	bonus : 3-bit (STATS)
+
+
+
+Exemple de code avec index des valeurs :
+-----------------------------------------
+Pour la liste des main stats : 2, 4, 6 (8 bits)
+value :	22 444 666
+index :	01 234 567
+
+Pour les familles : (13 bits)
+	F 1111 2222 3333
+	0 1234 5678 9012
+	0 0000 0000 0111
+	
+Pour une rune : Bonus x 6 (18 bits)
+	SSS SSS SSS SSS SSS SSS
+	012 345 678 901 234 567
+	000 000 000 011 111 111
+
+Pour un runage complet : liste main + familles + 6 runes (129 bits)
+	22444666 F111122223333 SSSSSSSSSSSSSSSSSS SSSSSSSSSSSSSSSSSS SSSSSSSSSSSSSSSSSS SSSSSSSSSSSSSSSSSS SSSSSSSSSSSSSSSSSS SSSSSSSSSSSSSSSSSS
+	01234567 8901234567890 123456789012345678 901234567890123456 789012345678901234 567890123456789012 345678901234567890 123456789012345678
+	00000000 0011111111112 222222222333333333 344444444445555555 555666666666677777 777778888888888999 999999900000000001 111111111222222222
+	00000000 0000000000000 000000000000000000 000000000000000000 000000000000000000 000000000000000000 000000011111111111 111111111111111111
+	
+	

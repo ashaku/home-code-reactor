@@ -1,0 +1,19 @@
+
+Qu'est ce que c'est ?
+=====================
+Un logiciel d'assistance de runage et de choix de composition d'équipes dans le jeu Summoners War : Sky Arena (SWSA)
+Il s'agit d'une part d'un algorithme génétique qui selectionne les meilleures composition avec des runages efficaces, et d'autre part d'un ensemble de classes permettant de simuler les règles du jeu.
+
+
+
+A quoi ca sert ?
+================
+Simuler des combats en masse, pour avoir des statistiques pertinentes
+Tester l'efficacité d'un runage spécifique sur un monstre
+Observer quelles compo gagnent régulièrement
+... tout usage des objets du jeu
+
+
+
+Comment on s'en sert ?
+======================

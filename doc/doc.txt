@@ -1,0 +1,114 @@
+DOC FONCTIONNELLE :
+===================
+
+	But :
+	-----
+		-> Organiser des projets
+		-> Pouvoir les Versionner
+		-> Les Tester
+
+
+	Interface :
+	-----------
+		index.html
+		C'est l'acceuil : permet de créer un nouveau projet, affiche la liste des projets, permet l'export de la forge complète
+		
+		forge.html
+		Page de travail sur un projet :
+			voir son nom, statut, dates, description, ...
+			le lancer en cliquant son nom
+			modifier son nom et/ou sa page de lancement
+			construire une nouvelle version (code, base ou les deux)
+			lister les versions
+			lister les tests par type (unitaires, fonctionnels, métier, critiques) : nom, statut, last_run, desc
+			pouvoir lancer tous les tests ou les tests d'un type ou un test seul
+
+		
+		
+		
+		
+		
+
+DOC TECHNIQUE :
+===============
+
+	Principe :
+						Client								Serveur
+					UI		<->		JS	  <====>	WS	  <->	DA		<->			DB
+		screen.css	index.html	forge.js		forge.php	bll.php	dal.php		MySql
+		
+		Coté client, un javascript transmet les demandes utilisateurs au serveur en appelant un webservice qui traite la demande
+		L'accès aux données se fait en plusieurs couches : 
+			- le webservice reçoit la demande sous la forme d'un numéro de fonction et execute la fonction correspondante de la BLL
+			- la BLL demande les données à la DAL, effectue le traitement de la demande et retourne le resultat
+			- la DAL contient les fonction d'accès à mySQL (conne)
+		
+		Client :
+			Interface utilisateur (UI) : les pages index.html et forge.html, le style screen.css
+			Javascript (JS) : forge.js : Interprete les commandes utilisateur et appelle un webservice
+		Serveur :
+			Webservice (WS) : forge.php : Reçoit une commande, l'execute et renvoie un JSON
+			Accès aux données :
+				BLL : bll.php : couche métier, effectue les traitements
+				DAL : dal.php : communique avec la base de données MySql
+
+
+	Méthode / usage : 
+		Dans l'interface Forge, on créé un projet. Un dossier est créé au nom du projet, avec :
+			- un dossier "code" pour le code du projet dans lequel on depose/créé/développe les fichiers du projet
+			- un dossier "doc" avec todo, doc_technique et doc_fonctionnelle
+			- un dossier "tests" avec tests.php dans lequel on dveloppera les tests relatifs au projet (tu_,tf_,tm,tc)
+			- un dossier versions pour les builds
+		Les tickets servent à tracer la vie du projet :
+			- fonctionnalités : pour indiquer des évolutions à apporter au projet
+			- anomalies : pour signaler les bugs et leur résolution
+			- dette : pour le refactoring
+		Les tests garantissent l'integrite du code. Un bouton permet de scanner le fichier de tests du projet et mets à jour la base
+		
+		
+	Tests :
+		2 fichiers de tests sont créés :
+			- projets/[projet]/tests/tests.php : pour y coder uniquement les fonctions de tests (pas d'appel)
+				// Le commentaire au dessus des fonctions sert de descriptif lors de l'enregistrement en base
+				// le préfixe des fonctions donne son type : tu_:unitaire ; tf_:fonctionnel ; tm:metier ; tc_:critique
+				// les fonctions doivent retourner true ou false
+			- projets/[projet]/tests/run_tests.php : contient les appel au projet et aux tests, pour y lancer les tests et afficher les resultats
+
+			
+	Modele de donnée :
+		projects(id,type,date_creation,name,folder,home,status,date_modif,desc)	=> type:JS/PHP	=> statut:run,pause,stop
+		tickets(id,id_projet,type,nom,desc,date_open,date_close)	=> type:fonctionnalité/correctif/refactoring	=> statut:créé,en cours,fini
+		notes(id,ticket,datetime,note)
+		tests(id,projet,type,nom,desc,last_run,status)	=> type:unitaire,fonctionnel,metier,critique	=> statut:OK,KO,NR
+		versions(id,projet,num_version,date,desc,code,base)
+		
+
+		
+	Arborescence :	
+		Forge/
+			projets/
+				projet1/
+					code/
+						[fichiers et dossiers du projet]
+					tests/
+						tests.js OU tests.php
+					versions/
+					
+				projet2/
+				...
+			bll.php
+			dal.php
+			forge.html
+			forge.js
+			forge.php
+			index.html
+			screen.css
+
+
+Vrac :
+	Numéros de version par défaut :
+		VERSION_MAJEURE.Fonctionalités.correctifs
+	
+	Statut des projets
+		Couleur : celle des derniers tests
+		Logo : (play)en cours ; (pause)en pause ; (stop)arreté ; 

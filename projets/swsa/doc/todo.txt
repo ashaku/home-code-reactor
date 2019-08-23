@@ -1,0 +1,47 @@
+
+Ajouter monstres :
+	* Chilling : pour le vol de buff
+	* Rina : bouclier
+
+	
+	
+Coder effet competence :
+	* leech life
+	* auto revive
+	* revive
+	
+	
+DOC :
+	gencode
+	rune / runage
+	skill classes : skill(name,cooldown,active) -> actions(target) -> effects
+	combat ; speedconter, teamArrays, archi/levels
+	
+	
+
+
+IA :
+****************
+	Simulant un joueur prenant certaines décisions rationnelles :
+		- AOEGROUP : pas de AoE sur un mob seul / force AoE des que possible sur equipe complete
+		- PARCIMONIE : pas skill 2 ou 3 sur un mob avec peu de vie
+		- ELEMENT : rechercher avantage elementaire
+		- URGENCE : prioriser les monstres proches de jouer (attack bar remplie) ou avec buff de vitesse / déprioriser les mob avec debuff vitesse
+		- BREAKDEF : faire des dégats de préférence sur les mob avec debuff def
+		- DEBUFF : preferer les dégats sur les mob avec debuff / preferer les debuff sur les mob sans debuff
+		- HEAL : pas de heal sur un mob full / force heal sur mob en difficulté
+		- IMMUNE : pas de debuff sur un mob immunité
+		- CLEANSE : pas de cleanse sur un mob sans debuff / force cleanse sur mob avec debuff
+		- STRIP : pas de strip sur un mob sans buff / force strip sur mob avec buff
+
+	=> Lors du choix de skill :
+		- determiner les options (liste des skill sans cooldown)
+		- evaluer chaque option et donner un score
+	
+
+AlgoGen
+********
+	pb : conserver identité du monstre
+	encodé dans code gen, dans une zone sanctuarisée :
+		a la reproduction : points de croisements choisis apres cette zone
+		a la mutation : gene choisi apres cette zone
