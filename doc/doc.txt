@@ -57,8 +57,8 @@ DOC TECHNIQUE :
 		Dans l'interface Forge, on créé un projet. Un dossier est créé au nom du projet, avec :
 			- un dossier "code" pour le code du projet dans lequel on depose/créé/développe les fichiers du projet
 			- un dossier "doc" avec todo, doc_technique et doc_fonctionnelle
-			- un dossier "tests" avec tests.php dans lequel on dveloppera les tests relatifs au projet (tu_,tf_,tm,tc)
-			- un dossier versions pour les builds
+			- un dossier "tests" avec tests.php dans lequel on dveloppera les tests relatifs au projet (tu_,tf_,tm,tc_)
+			- un dossier "versions" pour les builds
 		Les tickets servent à tracer la vie du projet :
 			- fonctionnalités : pour indiquer des évolutions à apporter au projet
 			- anomalies : pour signaler les bugs et leur résolution
@@ -70,9 +70,9 @@ DOC TECHNIQUE :
 		2 fichiers de tests sont créés :
 			- projets/[projet]/tests/tests.php : pour y coder uniquement les fonctions de tests (pas d'appel)
 				// Le commentaire au dessus des fonctions sert de descriptif lors de l'enregistrement en base
-				// le préfixe des fonctions donne son type : tu_:unitaire ; tf_:fonctionnel ; tm:metier ; tc_:critique
-				// les fonctions doivent retourner true ou false
-			- projets/[projet]/tests/run_tests.php : contient les appel au projet et aux tests, pour y lancer les tests et afficher les resultats
+				// le préfixe des fonctions donne son type : tu_:unitaire ; tf_:fonctionnel ; tm_:metier ; tc_:critique
+				// les fonctions doivent retourner un tableau [true/false, message]
+			- projets/[projet]/tests/run_tests.php : contient les appels au projet et aux tests, pour y lancer les tests et visualiser des resultats graphiques
 
 			
 	Modele de donnée :
