@@ -478,7 +478,8 @@
 	// Ajouter une version
 	function build_project_version($projectId,$projectFolder,$numVersion,$descVersion,$copyFiles){
 		
-		// Récuperer nb tickets
+		// 1. Récuperer le nb tickets evol,bug et dette pour cette version
+		// 2. Tagguer à cette version les tickets fermés depuis la dernière version
 		$db = connectToDatabase();
 		$debug = "";
 		
@@ -498,38 +499,36 @@
 			$nbFonc++;
 			$listId .= ",".$row[0];
 		}
-		// marquer les tickets résolus à cette version
-		if ( $nbFonc > 0 ){
-			$sql = "update tickets set version='".$numVersion."' where id in(".substr($listId,1).")";
-			$ret = SQLquery($db,$sql);
-		}
 		
-		// Récupérer le nombre de tickets anomalie encore ouverts à cette version (nombre de bugs à cette version)
+		// Récupérer le nombre de tickets anomalie encore ouverts (nombre de bugs à cette version)
 		$sql = "select count(id) from tickets where project_id=".$projectId." and type='correctif' and date_close='NULL'";
 		$ret = SQLquery($db,$sql);
 		if ( !$ret[0] ) return "{\"errors\":[\"Erreur de récupération des correctifs : $sql; ".$ret[1]."\"]}";
-		$nbBugs = 0; $listId = "";
-		while ( $row = getLine ( $ret[1] ) ){
-			$nbBugs++;
-			$listId .= ",".$row[0];
-		}
-		// marquer les tickets résolus à cette version
-		if ( $nbBugs > 0 ){
-			$sql = "update tickets set version='".$numVersion."' where id in(".substr($listId,1).")";
-			$ret = SQLquery($db,$sql);
-		}
+		$row = getLine ( $ret[1] );
+		$nbBugs = $row[0];
 		
-		// Récupérer le nombre de tickets refactoring encore ouverts à cette version (niveau de dette technique)
-		$sql = "select count(id) from tickets where project_id=".$projectId." and type='refactoring' and date_close<>'NULL'";
+		// Récupérer le nombre de tickets refactoring encore ouverts (niveau de dette tecchnique à cette version)
+		$sql = "select count(id) from tickets where project_id=".$projectId." and type='refactoring' and date_close='NULL'";
 		$ret = SQLquery($db,$sql);
 		if ( !$ret[0] ) return "{\"errors\":[\"Erreur de récupération des tickets refactoring : $sql; ".$ret[1]."\"]}";
-		$nbDette = 0; $listId = "";
-		while ( $row = getLine ( $ret[1] ) ){
-			$nbDette++;
-			$listId .= ",".$row[0];
-		}
+		$row = getLine ( $ret[1] );
+		$nbDette = $row[0];
+		
+		
+		// Recuperer les tickets anomalie fermés depuis la dernière version
+		$sql = "select id from tickets where project_id=".$projectId." and type='correctif' and date_close>'".$dateLastVersion."'";
+		$ret = SQLquery($db,$sql);
+		if ( !$ret[0] ) return "{\"errors\":[\"Erreur de récupération des correctifs : $sql; ".$ret[1]."\"]}";
+		while ( $row = getLine ( $ret[1] ) )	$listId .= ",".$row[0];
+		
+		// Recuperer les tickets refactoring fermés depuis la dernière version
+		$sql = "select id from tickets where project_id=".$projectId." and type='refactoring' and date_close>'".$dateLastVersion."'";
+		$ret = SQLquery($db,$sql);
+		if ( !$ret[0] ) return "{\"errors\":[\"Erreur de récupération des tickets refactoring : $sql; ".$ret[1]."\"]}";
+		while ( $row = getLine ( $ret[1] ) )	$listId .= ",".$row[0];
+		
 		// marquer les tickets résolus à cette version
-		if ( $nbDette > 0 ){
+		if ( $listId ){
 			$sql = "update tickets set version='".$numVersion."' where id in(".substr($listId,1).")";
 			$ret = SQLquery($db,$sql);
 		}
@@ -576,7 +575,7 @@
 	function get_version_notes($projectId,$numVersion){
 		$db = connectToDatabase();
 		if ( $numVersion == "current" ){
-			$sql = "select `type`,`name`,`desc` from tickets where project_id=".$projectId." and date_close<>'NULL' and version='' order by date_close";
+			$sql = "select `type`,`name`,`desc` from tickets where project_id=".$projectId." and date_close<>'NULL' and version is null order by date_close";
 		}else{
 			$sql = "select `type`,`name`,`desc` from tickets where project_id=".$projectId." and version='".$numVersion."' order by date_close";
 		}

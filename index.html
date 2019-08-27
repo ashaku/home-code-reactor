@@ -40,12 +40,12 @@
 					<div>
 						<!-- infos générales : statut,nom,desc,homepage -->
 						<div id="general">
-							<div id="project_status_change" onmouseout="hide_status_change()"/>
+							<div id="project_status_change"/>
 								<img src="img/run.png" onclick="change_project_status('run')" />
 								<img src="img/pause.png" onclick="change_project_status('pause')" />
 								<img src="img/stop.png" onclick="change_project_status('stop')" />
 							</div>
-							<div><img id="project_status" width=36 height=36 src="" onmouseover="display_status_change()"/><span id="project_name"></span></div>
+							<div><img id="project_status" width=36 height=36 src="" onclick="display_status_change()"/><span id="project_name"></span></div>
 							<div>/projets/<span id="project_folder"></span>/code/<input type="text" id="project_homepage" size="16" onKeyPress="handle_key_page(event)"/></div>
 							<div id="project_desc" onclick="toggle_desc()">
 								<div id="desc_text"></div>

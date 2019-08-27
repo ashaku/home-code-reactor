@@ -160,11 +160,6 @@ function display_status_change(){
 	$("#project_status_change").show();
 }
 
-// Masque le menu de changement de statut
-function hide_status_change(){
-	$("#project_status_change").hide();
-}
-
 // Change le statut du projet
 function change_project_status(statut){
 	// query WS
