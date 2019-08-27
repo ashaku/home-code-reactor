@@ -496,12 +496,8 @@
 		}
 	
 		// TESTING FUNCTIONS /!\
-		public function set_fightStat($stat,$val){
-			$this->fightStats[$stat] = $val;
-		}
-		public function set_fightStats($stats){
-			$this->fightStats = $stats;
-		}
+		public function set_fightStat($stat,$val){		$this->fightStats[$stat] = $val;	}
+		public function set_fightStats($stats){			$this->fightStats = $stats;			}
 	}
 	
 	class LeaderSkill{

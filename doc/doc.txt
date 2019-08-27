@@ -76,11 +76,10 @@ DOC TECHNIQUE :
 
 			
 	Modele de donnée :
-		projects(id,type,date_creation,name,folder,home,status,date_modif,desc)	=> type:JS/PHP	=> statut:run,pause,stop
-		tickets(id,id_projet,type,nom,desc,date_open,date_close)	=> type:fonctionnalité/correctif/refactoring	=> statut:créé,en cours,fini
-		notes(id,ticket,datetime,note)
-		tests(id,projet,type,nom,desc,last_run,status)	=> type:unitaire,fonctionnel,metier,critique	=> statut:OK,KO,NR
-		versions(id,projet,num_version,date,desc,code,base)
+		projets(id,type,date_creation,name,folder,page,desc,status,date_modif,db_name)	=> type:JS/PHP	=> statut:run,pause,stop
+		tests(id,project_id,type,name,desc,last_run,status,debug)	=> type:unitaire,fonctionnel,metier,critique	=> statut:OK,KO,NR
+		tickets(id,project_id,type,name,desc,date_open,date_close,version)	=> type:fonctionnalité/correctif/refactoring	=> statut:créé,en cours,fini
+		versions(id,project_id,num_version,date,notes,code,base,nb_func,nb_bug,nb_dette)
 		
 
 		
