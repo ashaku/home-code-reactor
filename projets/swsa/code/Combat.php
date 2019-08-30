@@ -225,6 +225,8 @@
 									}else{
 										// Monster survived
 										// TODO : APPLY vampire, despair, revenge RUNE EFFECTS HERE
+										
+										// APPLY passive skills triggered on hit HERE
 									}
 								}
 							}

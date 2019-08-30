@@ -604,6 +604,18 @@
 					$leaderSkill = new LeaderSkill($leadBonus,$leadCondition);
 					$stats = array(7500,468,363,105,15,50,0,15);
 					break;
+					
+				case "Chilling":
+					$element = ELMT::water;
+					$trickster = SkillLib::load_skill("Trickster");
+					$nightWind = SkillLib::load_skill("NightWind");
+					$cunning = SkillLib::load_skill("Cunning");
+					$skills = array($trickster,$nightWind,$cunning);
+					$leadBonus = new Bonus(STATS::PRE,1,40);
+					$leadCondition = array(LeaderSkill::ZONE,LeaderSkill::ZONE_DUNGEON);
+					$leaderSkill = new LeaderSkill($leadBonus,$leadCondition);
+					$stats = array(9225,736,626,101,15,50,0,15);
+					break;
 		
 			}
 			return new Monster($name,$element,$stats,$runeCode,$skills,$leaderSkill);

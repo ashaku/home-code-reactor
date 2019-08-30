@@ -230,6 +230,32 @@
 					$skillCooldown = 3;
 					$skillActive = true;
 					break;
+					
+				// Chilling
+				case "Trickster" :
+					$skillName = "Trickster";
+					$dmgFormula = array(array("SPD","+",180),array("/"),array(2.3),array("%"),array("ATK"));
+					$dmgEffect = SkillLib::get_damage_effect($dmgFormula,3,false);
+					$debuffData = array("type"=>DEBUFF::LOWSPD,"turns"=>2,"perCent"=>90);
+					$debuffEffect = SkillLib::get_single_effect(EFFECT::debuff,$debuffData);
+					$actionEffects = array($dmgEffect,$debuffEffect);
+					$action = new SkillAction($actionEffects,TARGET::UNIQUE,TARGET::ENNEMY);
+					$skillActions = array($action);
+					$skillCooldown = 1;
+					$skillActive = true;
+					break;
+				case "NightWind" :
+					$skillName = "Song of the Night Wind";
+					$buffSpdData=array("type"=>BUFF::RAISESPD,"turns"=>2,"perCent"=>100);
+					$buffSpdEffect = SkillLib::get_single_effect(EFFECT::buff,$buffSpdData);
+					$buffCRData=array("type"=>BUFF::RAISECR,"turns"=>2,"perCent"=>100);
+					$buffCREffect = SkillLib::get_single_effect(EFFECT::buff,$buffCRData);
+					$actionEffects = array($buffSpdEffect,$raiseAtkBarEffect);
+					$action = new SkillAction($actionEffects,TARGET::ALL,TARGET::ALLIES);
+					$skillActions = array($action);
+					$skillCooldown = 4;
+					$skillActive = true;
+				
 			}
 			return new Skill($skillName,$skillActions,$skillCooldown,$skillActive);
 		}
