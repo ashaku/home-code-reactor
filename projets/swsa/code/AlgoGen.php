@@ -12,7 +12,7 @@
 	// Child code is then mutated once, this will introduce new possibilities of genetic codes. Otherwise, population only have its starting gene pool and don't evolve to new solutions
 	// Selected parents and their children form a new generation and the cycle start over
 	
-	include("Monster.php");
+	include("Combat.php");
 	
 	
 	class AlgoGenSWSA{

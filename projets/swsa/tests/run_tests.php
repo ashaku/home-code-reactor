@@ -39,10 +39,11 @@
 		$bella = MonsterLib::load_monster("Belladeon",$runeCode);
 		$mav = MonsterLib::load_monster("Mav",$runeCode);
 		$baretta = MonsterLib::load_monster("Baretta",$runeCode);
+		$chill = MonsterLib::load_monster("Chilling",$runeCode);
 		
 		// Equipes & combat
-		$team1 = array($mav,$bernard,$vero);
-		$team2 = array($lushen,$bella,$baretta);
+		$team1 = array($chill,$lushen,$vero);
+		$team2 = array($bella,$bernard,$mav);
 		$combat = new Combat($team1,$team2,true);
 		$combat->run();
 		

@@ -15,7 +15,7 @@
 					$action = new SkillAction($actionEffects,TARGET::UNIQUE,TARGET::ENNEMY);
 					$skillActions = array($action);
 					$skillCooldown = 1;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				case "SuperCrush":
 					$skillName = "Super Crush";
@@ -27,7 +27,7 @@
 					$action = new SkillAction($actionEffects,TARGET::ALL,TARGET::ENNEMY);
 					$skillActions = array($action);
 					$skillCooldown = 3;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				case "ConversionOfMagic":
 					$skillName = "Conversion of magic";
@@ -36,7 +36,7 @@
 					$action = new SkillAction($actionEffects,TARGET::ALL,TARGET::ALLIES);
 					$skillActions = array($action);
 					$skillCooldown = 1;
-					$skillActive = false;
+					$skillPassive = EVT::START;
 					break;
 				
 				// Belladeon
@@ -50,7 +50,7 @@
 					$action = new SkillAction($actionEffects,TARGET::UNIQUE,TARGET::ENNEMY);
 					$skillActions = array($action);
 					$skillCooldown = 1;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				case "Seize" :
 					$skillName = "Seize";
@@ -61,7 +61,7 @@
 					$action = new SkillAction($actionEffects,TARGET::UNIQUE,TARGET::ENNEMY);
 					$skillActions = array($action);
 					$skillCooldown = 3;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				case "Mobilize" :
 					$skillName = "Mobilize";
@@ -71,7 +71,7 @@
 					$action = new SkillAction($actionEffects,TARGET::ALL,TARGET::ALLIES);
 					$skillActions = array($action);
 					$skillCooldown = 4;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 					
 				// Lushen
@@ -85,7 +85,7 @@
 					$action = new SkillAction($actionEffects,TARGET::UNIQUE,TARGET::ENNEMY);
 					$skillActions = array($action);
 					$skillCooldown = 1;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				case "surpriseBox" :
 					$skillName = "surprise box";
@@ -102,7 +102,7 @@
 					$action->apply_random();
 					$skillActions = array($action);
 					$skillCooldown = 4;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				case "amputationOfMagic" :
 					$skillName = "Amputation of magic";
@@ -112,7 +112,7 @@
 					$action = new SkillAction($actionEffects,TARGET::ALL,TARGET::ENNEMY);
 					$skillActions = array($action);
 					$skillCooldown = 4;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				
 				// Bernard
@@ -124,7 +124,7 @@
 					$action = new SkillAction($actionEffects,TARGET::UNIQUE,TARGET::ENNEMY);
 					$skillActions = array($action);
 					$skillCooldown = 1;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				case "BodySlam" :
 					$skillName = "Body Slam";
@@ -138,7 +138,7 @@
 					$action = new SkillAction($actionEffects,TARGET::UNIQUE,TARGET::ENNEMY);
 					$skillActions = array($action);
 					$skillCooldown = 3;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				case "TailWind" :
 					$skillName = "Tail Wind";
@@ -149,7 +149,7 @@
 					$action = new SkillAction($actionEffects,TARGET::ALL,TARGET::ALLIES);
 					$skillActions = array($action);
 					$skillCooldown = 5;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 					
 				// Baretta
@@ -165,7 +165,7 @@
 					$actionBuff = new SkillAction($actionEffects,TARGET::SELF,TARGET::ALLIES);
 					$skillActions = array($actionDmg,$actionBuff);
 					$skillCooldown = 1;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				case "Turbulence" :
 					$skillName = "Turbulence";
@@ -176,7 +176,7 @@
 					$action = new SkillAction($actionEffects,TARGET::UNIQUE,TARGET::ENNEMY);
 					$skillActions = array($action);
 					$skillCooldown = 4;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				case "PhoenixFury" :
 					$skillName = "Phoenix's Fury";
@@ -189,7 +189,7 @@
 					$action = new SkillAction($actionEffects,TARGET::ALL,TARGET::ENNEMY);
 					$skillActions = array($action);
 					$skillCooldown = 1;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 					
 				// Mav
@@ -203,7 +203,7 @@
 					$action = new SkillAction($actionEffects,TARGET::UNIQUE,TARGET::ENNEMY);
 					$skillActions = array($action);
 					$skillCooldown = 1;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				case "DeclareWar" :
 					$skillName = "Declare War";
@@ -216,7 +216,7 @@
 					$actionDebuff = new SkillAction($actionEffects,TARGET::UNIQUE,TARGET::ENNEMY);
 					$skillActions = array($actionHeal,$actionDebuff);
 					$skillCooldown = 3;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				case "WingsOfWind" :
 					$skillName = "Wings of Wind";
@@ -228,7 +228,7 @@
 					$action = new SkillAction($actionEffects,TARGET::ALL,TARGET::ALLIES);
 					$skillActions = array($action);
 					$skillCooldown = 3;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 					
 				// Chilling
@@ -242,7 +242,7 @@
 					$action = new SkillAction($actionEffects,TARGET::UNIQUE,TARGET::ENNEMY);
 					$skillActions = array($action);
 					$skillCooldown = 1;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
 					break;
 				case "NightWind" :
 					$skillName = "Song of the Night Wind";
@@ -254,10 +254,18 @@
 					$action = new SkillAction($actionEffects,TARGET::ALL,TARGET::ALLIES);
 					$skillActions = array($action);
 					$skillCooldown = 4;
-					$skillActive = true;
+					$skillPassive = EVT::NONE;
+				case "Cunning" :
+					$skillName = "The Cunning";
+					$stealEffect = SkillLib::get_single_effect(EFFECT::stealBuff,1);
+					$actionEffects = array($stealEffect);
+					$action = new SkillAction($actionEffects,TARGET::UNIQUE,TARGET::ENNEMY);
+					$skillActions = array($action);
+					$skillCooldown = 1;
+					$skillPassive = EVT::HIT;
 				
 			}
-			return new Skill($skillName,$skillActions,$skillCooldown,$skillActive);
+			return new Skill($skillName,$skillActions,$skillCooldown,$skillPassive);
 		}
 		
 		

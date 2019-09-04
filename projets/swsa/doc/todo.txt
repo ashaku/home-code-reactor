@@ -1,12 +1,10 @@
-
-Faire de "combat" le point d'entrée du code :
-AlgoGen -> Combat -> Monstre -> ...
-au lieu de :
-AlgoGen -> Monstre -> Combat, ...
+Ajout de Chilling
+Ajout de l'effet "steal buff"
+Refactoring des skills pour integrer l'evenement qui déclenche le skill passif
+Ajout d'un niveau de stat : skillStats. Les bonus modificateurs dus aux compétences
 
 
 Ajouter monstres :
-	* Chilling : pour le vol de buff
 	* Rina : bouclier
 
 	

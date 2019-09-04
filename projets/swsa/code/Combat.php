@@ -7,6 +7,9 @@
 	// dead mobs go to an array "teamDeads" (same principle as teams, same index too)
 	
 	
+	include("Monster.php");
+	
+	
 	class Combat{
 		
 		private $numTurn;
@@ -131,7 +134,7 @@
 			
 			// Execute monster passive skill
 			foreach ( $this->playingMonster->get_skills() as $id => $skill ){
-				if ( !$skill->is_active() && $this->playingMonster->get_cooldowns()[$id]==0 ){
+				if ( !$skill->is_active() && $this->playingMonster->get_cooldowns()[$id]==0 && $skill->get_passive_event()==EVT::START ){
 					$this->apply_skill_actions($skill);
 				}
 			}
@@ -163,7 +166,7 @@
 				echo " Stun, Frozen or Asleep";
 			}
 			
-			// Finally, cooldaown buffs and debuffs
+			// Finally, cooldown buffs and debuffs
 			$this->playingMonster->cooldown_buff_debuff();
 		}
 		
@@ -216,17 +219,28 @@
 								if ( $this->targetMonsters[$k] > -1 ){
 									if( $this->deal_damage ( $dmg, $idTarget, $ignoreDef, $isCritical ) ){
 										
-										// monster is dead : remove it from target(s)
+										// Target monster is dead : remove it from target list
 										$this->targetMonsters[$k] = -1;
 										$nbKill++;
 										
 										// TODO : APPLY auto-revive effect HERE
 										
 									}else{
-										// Monster survived
-										// TODO : APPLY vampire, despair, revenge RUNE EFFECTS HERE
+										// Target monster survived the attack
 										
 										// APPLY passive skills triggered on hit HERE
+										foreach ( $this->playingMonster->get_skills() as $id => $skill ){
+											if ( !$skill->is_active() && $this->playingMonster->get_cooldowns()[$id]==0 && $skill->get_passive_event()==EVT::HIT ){
+												$effect = $skill->get_actions()[0]->get_effects()[0];
+												$effectType = $effect->get_type();
+												$data = $effect->get_data();
+												$this->apply_single_effect($effectType,$data,$idTarget);
+											}
+										}
+										
+										
+										// TODO : APPLY vampire, despair, revenge RUNE EFFECTS HERE
+										
 									}
 								}
 							}
@@ -241,7 +255,17 @@
 						$data = $effect->get_data();
 						foreach ( $this->targetMonsters as $target ){
 							if ( $target > -1 ){
-								switch ( $effectType ){
+								$this->apply_single_effect($effectType,$data,$target);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		
+		public function apply_single_effect ( $effectType, $data, $target ){
+			switch ( $effectType ){
 									case EFFECT::debuff :			$this->apply_debuff ( $data, $target );				break;
 									case EFFECT::buff :				$this->apply_buff ( $data, $target );				break;
 									case EFFECT::strip :			$this->apply_strip ( $data, $target );				break;
@@ -251,12 +275,8 @@
 									case EFFECT::lowAtkBar :		$this->apply_change_ATB ( $data*-1, $target );		break;
 									case EFFECT::raisecooldown :	$this->apply_change_cooldown ( $data, $target );	break;
 									case EFFECT::lowcooldown :		$this->apply_change_cooldown ( $data*-1, $target );	break;
+									case EFFECT::stealBuff :		$this->apply_steal_buff ( $data, $target );			break;
 								}
-							}
-						}
-					}
-				}
-			}
 		}
 		
 		// Fill the targetMonsters array according to target Side and Zone
@@ -273,7 +293,7 @@
 				$provokingMonsterID = $this->playingMonster->is_provoked();
 				if ( $provokingMonsterID > -1 ){
 					array_push($this->targetMonsters,$provokingMonsterID);
-					if ( $this->verbose ) echo " PROVOKE ENNEMY #".$provokingMonsterID;
+					if ( $this->verbose ) echo " Provoked by ennemy #".$provokingMonsterID;
 					return;
 				}
 			}
@@ -441,14 +461,23 @@
 			if ( $this->verbose )	echo "<br> &nbsp; &nbsp; monster #".$idMonster." ATB move by ".$perCentRaise."% => $v";
 		}
 		
-		
 		// Raise or Lower target(s) skills cooldown
 		private function apply_change_cooldown($nbTurns, $idMonster){
 			$this->teams[$this->targetSide][$idMonster]->cooldown_skills($nbTurns);
 			if ( $this->verbose )	echo "<br> &nbsp; &nbsp; monster #".$idMonster." cooldowns move by ".$nbTurns." turns";
 		}
 		
-		
+		// Steal one buff from target
+		private function apply_steal_buff($nbBuffToSteal, $idMonster){
+			$buffs = $this->teams[$this->targetSide][$idMonster]->get_buffs();
+			if ( sizeof($buffs) > 0 ){
+				$this->teams[$this->targetSide][$idMonster]->remove_buff();
+				$b = array_shift ( $buffs );
+				$b["turns"]++;
+				if ( $this->verbose )	echo "<br> &nbsp; &nbsp; steal ".BUFF::get_name($b["type"])." from monster #".$idMonster;
+				$this->teams[$this->playingSide][$this->idPlayingMonster]->add_buff($b);
+			}
+		}
 		
 		
 		

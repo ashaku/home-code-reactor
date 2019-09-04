@@ -2,7 +2,6 @@
 	include ("constants.php");
 	include ("Skill.php");
 	include ("Rune.php");
-	include ("Combat.php");
 	
 	class Monster{
 		
@@ -15,6 +14,7 @@
 		private $buffList;			// array(BUFF)
 		private $debuffList;		// array(DEBUFF)
 		private $buffModifiers;		// array(STATS)
+		//private $skillModifiers;	// array(STATS)
 		private $fightStats;		// runeStat + buffModifiers
 		private $skills;			// Array(SKILL)
 		private $leaderSkill;		// Bonus
@@ -44,6 +44,7 @@
 			$this->runes = $runage;
 			$this->runeModifiers = array();
 			$this->buffModifiers = array();
+			$this->skillModifiers = array();
 			$this->calculate_runes_modifiers();
 			
 			// Init other members
@@ -340,10 +341,9 @@
 			}
 			// Check number of buffs. If more than 10 => ignore
 			if ( count($this->buffList) <= 10 ){
-				//array_shift($this->buffList);
 				array_push($this->buffList,$buff);
 				
-				// If new debuff is about stats : update fightStats
+				// If new buff is about stats : update fightStats
 				$this->update_buffModifiers(1,1,$buff);
 			}
 		}
@@ -430,9 +430,16 @@
 					}
 				}
 			}
+			
+			
+			// Pour Chilling : SPD+9 for each buff
+			if ( $this->name == "Chilling" ){
+				$this->fightStats[STATS::SPD] = $this->runeStats[STATS::SPD] + $this->buffModifiers[STATS::SPD] + sizeof($this->buffList)*9;
+			}
+			
 		}
 		
-		// Update the buff modifieres array
+		// Update the buff modifiers array
 		public function set_buffModifier ( $stat, $value ){
 			//echo "<br>update ".STATS::get_long_name($stat)." by ".$value;
 			$newModifier = $this->buffModifiers[$stat] + round($value);

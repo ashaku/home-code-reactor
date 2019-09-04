@@ -10,22 +10,22 @@
 		private $name;
 		private $actions;	// SkillAction
 		private $cooldown;	// int
-		private $active;	// bool
+		private $passive;	// enum
 	
-		function __construct($aNom,$aActions,$aCooldown,$aActive) {
+		function __construct($aNom,$aActions,$aCooldown,$aPassive) {
 			$this->name = $aNom;
 			$this->actions = $aActions;
 			$this->cooldown = $aCooldown;
-			$this->active = $aActive;
+			$this->passive = $aPassive;
 		}
 		public function get_name(){			return $this->name;		}
 		public function get_actions(){		return $this->actions;	}
 		public function get_cooldown(){		return $this->cooldown;	}
-		public function is_active(){		return $this->active;	}
-		
+		public function is_active(){		return ( $this->passive == EVT::NONE ) ? true : false;		}
+		public function get_passive_event(){	return $this->passive;	}
 		public function get_desc(){
 			$pres = "";
-			if ( !$this->active ) $pres = "(passive)\n";
+			if ( !$this->is_active() ) $pres = "(passive)\n";
 			foreach ( $this->actions as $action ){
 				$pres.= $action->get_desc()."\n";
 			}

@@ -75,6 +75,7 @@
 		const revive = 9;			// recall ally from dead
 		const lowdamage = 10;		// reduce damages
 		const damage = 11;			// lower ennemy hp
+		const stealBuff = 12;		// steal buff (0:all, n:n)
 		public static function get_name($aSkillTypeID){
 			$tabSkillsNames = array("debuff","buff","strip","cleanse","heal","raise attack bar","lower attack bar","lower cooldown","raise cooldown","revive","low damage","damage");
 			return $tabSkillsNames[$aSkillTypeID];
@@ -130,6 +131,20 @@
 		public static function get_name($aBuffID){
 			$tabBuffNames = array("Raise ATK","Raise SPD","Raise DEF","Immunity","Reflect DMG","Raise CR","Heal","Shield","Counter","Invincible");
 			return $tabBuffNames[$aBuffID];
+		}
+	}
+	
+	
+	class EVT{
+		const NONE = 0;
+		const START = 1;
+		const HIT = 2;
+		const TAKEHIT = 3;
+		const DEATHHIT = 4;
+		
+		public static function get_name($aEventID){
+			$tabEventNames = array("Active","turn start","hitting","getting hit","taking lethal hit");
+			return $tabEventNames[$aEventID];
 		}
 	}
 ?>
